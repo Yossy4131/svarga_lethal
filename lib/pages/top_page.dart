@@ -162,11 +162,11 @@ class _HeroBrandBlock extends StatelessWidget {
             Flexible(
               child: Text(
                 'Svarga Lethal',
-                style: GoogleFonts.bebasNeue(
+                style: GoogleFonts.raleway(
                   fontSize: titleSize,
+                  fontWeight: FontWeight.w700,
                   color: Colors.white,
-                  letterSpacing: 3,
-                  height: 0.88,
+                  letterSpacing: 2,
                 ),
               ),
             ),
@@ -215,8 +215,9 @@ class _HeroVisualCard extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Coming Soon...',
-            style: GoogleFonts.bebasNeue(
+            style: GoogleFonts.raleway(
               fontSize: 38,
+              fontWeight: FontWeight.w700,
               color: Colors.white,
               letterSpacing: 2,
             ),
@@ -429,8 +430,9 @@ class _NavButton extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: GoogleFonts.bebasNeue(
+                    style: GoogleFonts.raleway(
                       fontSize: 22,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
                       letterSpacing: 1.5,
                     ),
@@ -491,8 +493,9 @@ class _SiteDrawer extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           'MENU',
-                          style: GoogleFonts.bebasNeue(
+                          style: GoogleFonts.raleway(
                             fontSize: 28,
+                            fontWeight: FontWeight.w700,
                             color: Colors.white,
                             letterSpacing: 2,
                           ),
@@ -583,8 +586,9 @@ class _DrawerItem extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.bebasNeue(
+                  style: GoogleFonts.raleway(
                     fontSize: 22,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
                     letterSpacing: 1.5,
                   ),

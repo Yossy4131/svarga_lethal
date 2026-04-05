@@ -24,23 +24,25 @@ class SvargaLethalApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         scaffoldBackgroundColor: const Color(0xFF0B0F2E),
-        textTheme: GoogleFonts.spaceGroteskTextTheme(baseTextTheme).copyWith(
-          headlineLarge: GoogleFonts.bebasNeue(
+        textTheme: GoogleFonts.ralewayTextTheme(baseTextTheme).copyWith(
+          headlineLarge: GoogleFonts.raleway(
             fontSize: 76,
+            fontWeight: FontWeight.w800,
             letterSpacing: 1.2,
             color: Colors.white,
           ),
-          headlineMedium: GoogleFonts.bebasNeue(
+          headlineMedium: GoogleFonts.raleway(
             fontSize: 44,
+            fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
             color: Colors.white,
           ),
-          bodyLarge: GoogleFonts.sourceSans3(
+          bodyLarge: GoogleFonts.raleway(
             fontSize: 18,
             height: 1.55,
             color: const Color(0xFFE9EAEE),
           ),
-          bodyMedium: GoogleFonts.sourceSans3(
+          bodyMedium: GoogleFonts.raleway(
             fontSize: 16,
             height: 1.5,
             color: const Color(0xFFCBCED8),

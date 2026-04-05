@@ -116,8 +116,9 @@ class _PageHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           'APPLY',
-          style: GoogleFonts.bebasNeue(
+          style: GoogleFonts.raleway(
             fontSize: 34,
+            fontWeight: FontWeight.w700,
             color: Colors.white,
             letterSpacing: 2,
           ),
@@ -155,8 +156,9 @@ class _ApplyForm extends StatelessWidget {
         children: [
           Text(
             'VISIT APPLICATION',
-            style: GoogleFonts.bebasNeue(
+            style: GoogleFonts.raleway(
               fontSize: 32,
+              fontWeight: FontWeight.w700,
               color: Colors.white,
               letterSpacing: 1.5,
             ),
@@ -210,7 +212,7 @@ class _ApplyForm extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFB38246),
                 padding: const EdgeInsets.symmetric(vertical: 18),
-                textStyle: GoogleFonts.spaceGrotesk(
+                textStyle: GoogleFonts.raleway(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
