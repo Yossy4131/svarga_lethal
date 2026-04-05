@@ -1,11 +1,11 @@
 {
-    "name": "svarga_lethal",
-    "short_name": "svarga_lethal",
+    "name": "Svarga Lethal",
+    "short_name": "Svarga",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0B0F2E",
+    "theme_color": "#171D5C",
+    "description": "Svarga Lethal host event official site.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

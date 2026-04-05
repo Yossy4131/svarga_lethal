@@ -1,30 +1,46 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:svarga_lethal/main.dart';
+import 'package:svarga_lethal/pages/apply_page.dart';
+import 'package:svarga_lethal/pages/cast_page.dart';
+import 'package:svarga_lethal/pages/top_page.dart';
+import 'package:svarga_lethal/widgets/brand_logo.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('SplashPage: アプリ起動時にブランドロゴが表示される', (tester) async {
+    await tester.pumpWidget(const SvargaLethalApp());
+    expect(find.byKey(const ValueKey('splash-logo')), findsOneWidget);
+    expect(find.byType(BrandLogo), findsAtLeastNWidgets(1));
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('TopPage: 主要コンテンツ・次回開催日・注意事項・遷移ボタンが描画される', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: TopPage()));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Coming Soon...'), findsOneWidget);
+    // 禁止事項
+    expect(find.text('PROHIBITED'), findsOneWidget);
+    // 遷移ボタン
+    expect(find.byKey(const ValueKey('nav-cast-btn')), findsOneWidget);
+    expect(find.byKey(const ValueKey('nav-apply-btn')), findsOneWidget);
+  });
+
+  testWidgets('CastPage: ロゴと戻るボタンが表示される', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: CastPage()));
+    await tester.pump();
+
+    expect(find.text('CAST'), findsOneWidget);
+    expect(find.byType(BrandLogo), findsAtLeastNWidgets(1));
+    expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
+  });
+
+  testWidgets('ApplyPage: フォームと送信ボタンが表示される', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ApplyPage()));
+    await tester.pump();
+
+    expect(find.text('APPLY'), findsOneWidget);
+    expect(find.byKey(const ValueKey('apply-submit-btn')), findsOneWidget);
+    expect(find.text('応募する'), findsOneWidget);
   });
 }
