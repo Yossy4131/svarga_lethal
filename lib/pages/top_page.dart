@@ -174,8 +174,8 @@ class _HeroBrandBlock extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Text(
-          'Svarga Lethalは【リーサルフリート】アバターオンリーのホストクラブです。\n'
-          'カッコいいリーサルフリートのキャストと夢のようなひとときをお過ごしください。',
+          'Svarga Lethalは【リーサルフリート】アバターオンリーのホストクラブです\n'
+          'カッコいいリーサルフリートのキャストと夢のようなひとときをお過ごしください',
           style: theme.textTheme.bodyLarge,
         ),
       ],
@@ -244,7 +244,7 @@ class _NoticeSection extends StatelessWidget {
     'そのほかスタッフ・キャストが迷惑と判断した行為',
   ];
 
-  static const _footer = '1回は注意、同じことを繰り返すと退店になる可能性があります。';
+  static const _footer = '1回は注意、同じことを繰り返すと退店になる可能性があります';
 
   @override
   Widget build(BuildContext context) {
