@@ -50,8 +50,6 @@ class TopPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _TopBar(isWide: isWide),
-                          const SizedBox(height: 48),
                           _HeroBrandBlock(compact: !isWide),
                           const SizedBox(height: 34),
                           _NavigationRow(isWide: isWide),
@@ -132,7 +130,7 @@ class _HeroBrandBlock extends StatelessWidget {
           // 背景画像
           Positioned.fill(
             child: Image.asset(
-              'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
+              'assets/images/VRChat_2026-04-06_20-19-33.375_3840x2160.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -147,6 +145,30 @@ class _HeroBrandBlock extends StatelessWidget {
                     const Color(0xFF0B0F2E).withAlpha(30),
                     const Color(0xFF0B0F2E).withAlpha(180),
                   ],
+                ),
+              ),
+            ),
+          ),
+          // メニューボタン（左上）
+          Positioned(
+            top: 12,
+            right: 12,
+            child: Builder(
+              builder: (context) => InkWell(
+                onTap: () => Scaffold.of(context).openEndDrawer(),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0x33000000),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0x55FFFFFF)),
+                  ),
+                  child: const Icon(
+                    Icons.menu_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
               ),
             ),
@@ -461,10 +483,10 @@ class _GallerySlideshow extends StatefulWidget {
 
 class _GallerySlideshowState extends State<_GallerySlideshow> {
   static const _images = [
+    'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-18-50.851_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-19-33.375_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-20-02.523_3840x2160.png',
-    'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
   ];
 
   late final PageController _pageCtrl;
@@ -499,7 +521,7 @@ class _GallerySlideshowState extends State<_GallerySlideshow> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           '店内の様子',
