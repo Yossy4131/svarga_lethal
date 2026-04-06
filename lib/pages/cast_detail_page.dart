@@ -279,20 +279,12 @@ class _InfoColumn extends StatelessWidget {
         const SizedBox(height: 6),
         // 役職
         if (role.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: const Color(0x33B38246),
-              border: Border.all(color: const Color(0xFFB38246)),
-            ),
-            child: Text(
-              role,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFFD4A870),
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
-              ),
+          Text(
+            role.split(',').map((r) => r.trim()).join(' / '),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: const Color(0xFFD4A870),
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
             ),
           ),
         const SizedBox(height: 20),

@@ -237,7 +237,7 @@ class _CastCard extends StatelessWidget {
               ),
             ),
             Text(
-              role,
+              role.split(',').map((r) => r.trim()).join(' / '),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: const Color(0xFFD4A870),
                 fontWeight: FontWeight.w700,
