@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../config/env.dart';
+
 class ApiException implements Exception {
   final String message;
   const ApiException(this.message);
@@ -9,8 +11,7 @@ class ApiException implements Exception {
 }
 
 class ApiService {
-  static const String _base =
-      'https://svarga-admin-api.y-yoshida1031.workers.dev';
+  static const String _base = Env.workerBaseUrl;
 
   // ── キャッシュ ────────────────────────────────────────────────────────────
   static const _eventTtl = Duration(minutes: 5);
