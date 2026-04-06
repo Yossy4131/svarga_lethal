@@ -134,7 +134,7 @@ class _HeroBrandBlock extends StatelessWidget {
             Flexible(
               child: Text(
                 'Svarga Lethal',
-                style: GoogleFonts.raleway(
+                style: GoogleFonts.shipporiMincho(
                   fontSize: titleSize,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -233,29 +233,35 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
                 ),
               ),
             )
-          else
-            Text(
-              _event != null
-                  ? _formatDate(_event!['event_date'] as String?)
-                  : 'Coming Soon...',
-              style: GoogleFonts.raleway(
-                fontSize: 38,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
-            ),
-          if (_loaded && _event != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
+          else ...[
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
               child: Text(
-                _event!['title'] as String? ?? '',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFFB38246),
-                  fontWeight: FontWeight.w600,
+                _event != null
+                    ? _formatDate(_event!['event_date'] as String?)
+                    : 'Coming Soon...',
+                style: GoogleFonts.shipporiMincho(
+                  fontSize: 38,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  letterSpacing: 2,
                 ),
               ),
             ),
+            if (_event != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                'OPEN 23:00 ～ CLOSE 24:00',
+                style: GoogleFonts.shipporiMincho(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFFB38246),
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ],
         ],
       ),
     );
@@ -369,7 +375,7 @@ class _NavButton extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: GoogleFonts.raleway(
+                    style: GoogleFonts.shipporiMincho(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -432,7 +438,7 @@ class _SiteDrawer extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           'MENU',
-                          style: GoogleFonts.raleway(
+                          style: GoogleFonts.shipporiMincho(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -525,7 +531,7 @@ class _DrawerItem extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.raleway(
+                  style: GoogleFonts.shipporiMincho(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,

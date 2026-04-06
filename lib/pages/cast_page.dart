@@ -147,7 +147,7 @@ class _PageHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           'CAST',
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.shipporiMincho(
             fontSize: 34,
             fontWeight: FontWeight.w700,
             color: Colors.white,
@@ -217,7 +217,7 @@ class _CastCard extends StatelessWidget {
                     : Center(
                         child: Text(
                           name.isNotEmpty ? name[0] : '?',
-                          style: GoogleFonts.raleway(
+                          style: GoogleFonts.shipporiMincho(
                             fontSize: 56,
                             fontWeight: FontWeight.w800,
                             color: Colors.white.withAlpha(200),
@@ -229,7 +229,7 @@ class _CastCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               name,
-              style: GoogleFonts.raleway(
+              style: GoogleFonts.shipporiMincho(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,

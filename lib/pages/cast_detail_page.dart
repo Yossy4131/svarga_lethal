@@ -228,7 +228,7 @@ class _BustImageFrame extends StatelessWidget {
                     padding: const EdgeInsets.all(60),
                     child: Text(
                       name.isNotEmpty ? name[0] : '?',
-                      style: GoogleFonts.raleway(
+                      style: GoogleFonts.shipporiMincho(
                         fontSize: 80,
                         fontWeight: FontWeight.w800,
                         color: Colors.white.withAlpha(200),
@@ -269,7 +269,7 @@ class _InfoColumn extends StatelessWidget {
         // 名前
         Text(
           name,
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.shipporiMincho(
             fontSize: 32,
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -300,7 +300,7 @@ class _InfoColumn extends StatelessWidget {
         if (message.isNotEmpty) ...[
           Text(
             'MESSAGE',
-            style: GoogleFonts.raleway(
+            style: GoogleFonts.shipporiMincho(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: const Color(0x99FFFFFF),
@@ -322,7 +322,7 @@ class _InfoColumn extends StatelessWidget {
         if (fullImage != null) ...[
           Text(
             'FULL BODY',
-            style: GoogleFonts.raleway(
+            style: GoogleFonts.shipporiMincho(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: const Color(0x99FFFFFF),
