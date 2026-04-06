@@ -55,6 +55,8 @@ class TopPage extends StatelessWidget {
                           _HeroBrandBlock(compact: !isWide),
                           const SizedBox(height: 34),
                           _NavigationRow(isWide: isWide),
+                          const SizedBox(height: 44),
+                          const _GallerySlideshow(),
                           const SizedBox(height: 30),
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
@@ -123,34 +125,67 @@ class _HeroBrandBlock extends StatelessWidget {
     final logoSize = compact ? 80.0 : 100.0;
     final titleSize = compact ? 56.0 : 76.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            BrandLogo(size: logoSize),
-            const SizedBox(width: 20),
-            Flexible(
-              child: Text(
-                'Svarga Lethal',
-                style: GoogleFonts.raleway(
-                  fontSize: titleSize,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  letterSpacing: 2,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          // 背景画像
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // 暗めのグラデーションオーバーレイ（テキスト可読性確保）
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [
+                    const Color(0xFF0B0F2E).withAlpha(30),
+                    const Color(0xFF0B0F2E).withAlpha(180),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Text(
-          'Svarga Lethalは【リーサルフリート】アバターオンリーのホストクラブです\n'
-          'カッコいいリーサルフリートのキャストと夢のようなひとときをお過ごしください',
-          style: theme.textTheme.bodyLarge,
-        ),
-      ],
+          ),
+          // コンテンツ
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    BrandLogo(size: logoSize),
+                    const SizedBox(width: 20),
+                    Flexible(
+                      child: Text(
+                        'Svarga Lethal',
+                        style: GoogleFonts.shipporiMincho(
+                          fontSize: titleSize,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Svarga Lethalは【リーサルフリート】アバターオンリーのホストクラブです\n'
+                  'カッコいいリーサルフリートのキャストと夢のようなひとときをお過ごしください',
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -200,6 +235,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
     final theme = Theme.of(context);
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
@@ -212,6 +248,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'NEXT SHOWCASE',
@@ -233,29 +270,35 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
                 ),
               ),
             )
-          else
-            Text(
-              _event != null
-                  ? _formatDate(_event!['event_date'] as String?)
-                  : 'Coming Soon...',
-              style: GoogleFonts.raleway(
-                fontSize: 38,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
-            ),
-          if (_loaded && _event != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
+          else ...[
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
               child: Text(
-                _event!['title'] as String? ?? '',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFFB38246),
-                  fontWeight: FontWeight.w600,
+                _event != null
+                    ? _formatDate(_event!['event_date'] as String?)
+                    : 'Coming Soon...',
+                style: GoogleFonts.shipporiMincho(
+                  fontSize: 38,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  letterSpacing: 2,
                 ),
               ),
             ),
+            if (_event != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                'OPEN 23:00 ～ CLOSE 24:00',
+                style: GoogleFonts.shipporiMincho(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFFB38246),
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ],
         ],
       ),
     );
@@ -309,6 +352,7 @@ class _NavigationRow extends StatelessWidget {
             ),
           )
         : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const _HeroVisualCard(),
               const SizedBox(height: 14),
@@ -351,49 +395,169 @@ class _NavButton extends StatelessWidget {
           color: const Color(0x1AFFFFFF),
           border: Border.all(color: accentColor.withAlpha(80)),
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: accentColor.withAlpha(40),
-              ),
-              child: Icon(icon, color: accentColor, size: 24),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: GoogleFonts.raleway(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: 1.5,
-                    ),
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: accentColor.withAlpha(40),
                   ),
-                  Text(
-                    sublabel,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: accentColor,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: Icon(icon, color: accentColor, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: GoogleFonts.shipporiMincho(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      Text(
+                        sublabel,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: accentColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: accentColor.withAlpha(180),
-              size: 18,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: accentColor.withAlpha(180),
+                  size: 18,
+                ),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 店内ギャラリー スライドショー
+// ---------------------------------------------------------------------------
+
+class _GallerySlideshow extends StatefulWidget {
+  const _GallerySlideshow();
+
+  @override
+  State<_GallerySlideshow> createState() => _GallerySlideshowState();
+}
+
+class _GallerySlideshowState extends State<_GallerySlideshow> {
+  static const _images = [
+    'assets/images/VRChat_2026-04-06_20-18-50.851_3840x2160.png',
+    'assets/images/VRChat_2026-04-06_20-19-33.375_3840x2160.png',
+    'assets/images/VRChat_2026-04-06_20-20-02.523_3840x2160.png',
+    'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
+  ];
+
+  late final PageController _pageCtrl;
+  int _current = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageCtrl = PageController(viewportFraction: 0.88);
+    _startTimer();
+  }
+
+  void _startTimer() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      final next = (_current + 1) % _images.length;
+      _pageCtrl.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+      );
+      _startTimer();
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '店内の様子',
+          style: GoogleFonts.shipporiMincho(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final maxW = constraints.maxWidth > 720 ? 700.0 : double.infinity;
+            return Center(
+              child: SizedBox(
+                width: maxW,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: PageView.builder(
+                    controller: _pageCtrl,
+                    itemCount: _images.length,
+                    onPageChanged: (i) => setState(() => _current = i),
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(_images[i], fit: BoxFit.cover),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        // インジケーター
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            _images.length,
+            (i) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: _current == i ? 20 : 7,
+              height: 7,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: _current == i
+                    ? const Color(0xFFB38246)
+                    : const Color(0x55FFFFFF),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -432,7 +596,7 @@ class _SiteDrawer extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           'MENU',
-                          style: GoogleFonts.raleway(
+                          style: GoogleFonts.shipporiMincho(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -525,7 +689,7 @@ class _DrawerItem extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.raleway(
+                  style: GoogleFonts.shipporiMincho(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,

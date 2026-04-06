@@ -32,6 +32,45 @@ class _ApplyPageState extends State<ApplyPage> {
   bool _submitted = false;
   bool _isSubmitting = false;
 
+  // 募集期間チェック用
+  bool _checkingPeriod = true; // 初工中フラグ
+  bool _isOpen = false; // 募集期間内かどうか
+  Map<String, dynamic>? _nextEvent;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRecruitmentPeriod();
+  }
+
+  Future<void> _checkRecruitmentPeriod() async {
+    final event = await ApiService.getNextEvent();
+    if (!mounted) return;
+
+    bool open = false;
+    if (event != null) {
+      final startStr = event['recruitment_start'] as String?;
+      final endStr = event['recruitment_end'] as String?;
+      final now = DateTime.now();
+      if (startStr != null && endStr != null) {
+        final start = DateTime.tryParse(startStr);
+        final end = DateTime.tryParse(endStr);
+        if (start != null && end != null) {
+          open = now.isAfter(start) && now.isBefore(end);
+        }
+      } else {
+        // 募集期間未設定の場合は閉じる
+        open = false;
+      }
+    }
+
+    setState(() {
+      _nextEvent = event;
+      _isOpen = open;
+      _checkingPeriod = false;
+    });
+  }
+
   @override
   void dispose() {
     _vrChatIdController.dispose();
@@ -109,7 +148,18 @@ class _ApplyPageState extends State<ApplyPage> {
                     Center(
                       child: SizedBox(
                         width: formWidth,
-                        child: _submitted
+                        child: _checkingPeriod
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 60),
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xFFD4A870),
+                                  ),
+                                ),
+                              )
+                            : !_isOpen
+                            ? _ClosedCard(theme: theme, event: _nextEvent)
+                            : _submitted
                             ? _ThankYouCard(theme: theme)
                             : _ApplyForm(
                                 formKey: _formKey,
@@ -158,7 +208,7 @@ class _PageHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           'APPLY',
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.shipporiMincho(
             fontSize: 34,
             fontWeight: FontWeight.w700,
             color: Colors.white,
@@ -200,7 +250,7 @@ class _ApplyForm extends StatelessWidget {
         children: [
           Text(
             'VISIT APPLICATION',
-            style: GoogleFonts.raleway(
+            style: GoogleFonts.shipporiMincho(
               fontSize: 32,
               fontWeight: FontWeight.w700,
               color: Colors.white,
@@ -242,7 +292,7 @@ class _ApplyForm extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFB38246),
                 padding: const EdgeInsets.symmetric(vertical: 18),
-                textStyle: GoogleFonts.raleway(
+                textStyle: GoogleFonts.shipporiMincho(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
@@ -407,6 +457,129 @@ class _FormField extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 募集期間外カード
+// ---------------------------------------------------------------------------
+
+class _ClosedCard extends StatelessWidget {
+  const _ClosedCard({required this.theme, required this.event});
+
+  final ThemeData theme;
+  final Map<String, dynamic>? event;
+
+  String _formatDate(String? iso) {
+    if (iso == null) return '';
+    try {
+      final dt = DateTime.parse(iso).toLocal();
+      const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+      final wd = weekdays[dt.weekday - 1];
+      return '${dt.year}.${dt.month.toString().padLeft(2, '0')}'
+          '.${dt.day.toString().padLeft(2, '0')} ($wd)';
+    } catch (_) {
+      return iso;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final eventDate = event?['event_date'] as String?;
+    final startStr = event?['recruitment_start'] as String?;
+    final endStr = event?['recruitment_end'] as String?;
+
+    return Container(
+      padding: const EdgeInsets.all(36),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: const Color(0x1FFFFFFF),
+        border: Border.all(color: const Color(0x38FFFFFF)),
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.hourglass_empty_rounded,
+            color: Color(0xFFB38246),
+            size: 56,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            '現在募集期間外です',
+            style: GoogleFonts.shipporiMincho(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '次回開催日をお待ちください',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: const Color(0xFFCBCED8),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (eventDate != null) ...[
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0x22B38246),
+                border: Border.all(color: const Color(0x66B38246)),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'NEXT EVENT',
+                    style: GoogleFonts.shipporiMincho(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF93ABE8),
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _formatDate(eventDate),
+                    style: GoogleFonts.shipporiMincho(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  if (startStr != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '募集期間: ${_formatDate(startStr)} 〜 ${_formatDate(endStr)}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: const Color(0xFFD4A870),
+                        fontSize: 13,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 28),
+          OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Color(0x66FFFFFF)),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+            ),
+            child: const Text('TOPに戻る'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../services/api_service.dart';
 import '../widgets/brand_logo.dart';
 import 'top_page.dart';
 
@@ -147,6 +148,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     });
 
     _controller.forward().whenComplete(_goToTop);
+
+    // スプラッシュアニメーション中にAPIデータをバックグラウンドでプリフェッチ
+    ApiService.prefetch();
   }
 
   void _goToTop() {

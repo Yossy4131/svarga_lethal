@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'pages/splash_page.dart';
@@ -24,25 +24,25 @@ class SvargaLethalApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         scaffoldBackgroundColor: const Color(0xFF0B0F2E),
-        textTheme: GoogleFonts.ralewayTextTheme(baseTextTheme).copyWith(
-          headlineLarge: GoogleFonts.raleway(
+        textTheme: GoogleFonts.shipporiMinchoTextTheme(baseTextTheme).copyWith(
+          headlineLarge: GoogleFonts.shipporiMincho(
             fontSize: 76,
             fontWeight: FontWeight.w800,
             letterSpacing: 1.2,
             color: Colors.white,
           ),
-          headlineMedium: GoogleFonts.raleway(
+          headlineMedium: GoogleFonts.shipporiMincho(
             fontSize: 44,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
             color: Colors.white,
           ),
-          bodyLarge: GoogleFonts.raleway(
+          bodyLarge: GoogleFonts.shipporiMincho(
             fontSize: 18,
             height: 1.55,
             color: const Color(0xFFE9EAEE),
           ),
-          bodyMedium: GoogleFonts.raleway(
+          bodyMedium: GoogleFonts.shipporiMincho(
             fontSize: 16,
             height: 1.5,
             color: const Color(0xFFCBCED8),

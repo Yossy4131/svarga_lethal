@@ -1,11 +1,9 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/brand_logo.dart';
 import '../services/api_service.dart';
+import 'cast_detail_page.dart';
 
 /// キャスト一覧ページ。DBから動的取得して表示する。
 class CastPage extends StatefulWidget {
@@ -27,10 +25,12 @@ class _CastPageState extends State<CastPage> {
 
   Future<void> _fetch() async {
     final casts = await ApiService.getCasts();
-    if (mounted) setState(() {
-      _casts = casts;
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _casts = casts;
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -52,6 +52,17 @@ class _CastPageState extends State<CastPage> {
               final isWide = constraints.maxWidth > 900;
               final horizontalPadding = isWide ? 72.0 : 24.0;
               final crossAxisCount = isWide ? 3 : 2;
+
+              // 9:16 画像を正確に収めるセル高さを計算
+              final cellWidth =
+                  (constraints.maxWidth -
+                      horizontalPadding * 2 -
+                      14.0 * (crossAxisCount - 1)) /
+                  crossAxisCount;
+              final imageWidth = cellWidth - 24.0; // カード内パディング 12px × 2
+              final imageHeight = imageWidth * 16.0 / 9.0;
+              // セル高さ = 上パディング + 画像 + gap + 名前 + 役職 + 下パディング
+              final cellHeight = 12.0 + imageHeight + 10.0 + 28.0 + 22.0 + 12.0;
 
               return CustomScrollView(
                 slivers: [
@@ -94,11 +105,10 @@ class _CastPageState extends State<CastPage> {
                           crossAxisCount: crossAxisCount,
                           crossAxisSpacing: 14,
                           mainAxisSpacing: 14,
-                          childAspectRatio: 0.78,
+                          mainAxisExtent: cellHeight,
                         ),
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) =>
-                              _CastCard(cast: _casts[index]),
+                          (context, index) => _CastCard(cast: _casts[index]),
                           childCount: _casts.length,
                         ),
                       ),
@@ -137,7 +147,7 @@ class _PageHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           'CAST',
-          style: GoogleFonts.raleway(
+          style: GoogleFonts.shipporiMincho(
             fontSize: 34,
             fontWeight: FontWeight.w700,
             color: Colors.white,
@@ -154,101 +164,88 @@ class _CastCard extends StatelessWidget {
 
   final Map<String, dynamic> cast;
 
-  ImageProvider? _avatarImage() {
-    final url = cast['avatar_url'] as String?;
-    if (url == null || url.isEmpty) return null;
-    if (url.startsWith('data:')) {
-      final comma = url.indexOf(',');
-      if (comma != -1) {
-        try {
-          return MemoryImage(base64Decode(url.substring(comma + 1)));
-        } catch (_) {}
-      }
-    }
-    return NetworkImage(url);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final name = (cast['name'] as String? ?? '').toUpperCase();
     final role = cast['role'] as String? ?? '';
-    final message = cast['message'] as String? ?? '';
-    final avatarImage = _avatarImage();
+    final fullUrl = cast['avatar_full_url'] as String?;
+    final bustUrl = cast['avatar_url'] as String?;
+    // 全身 > 胸上 の優先順
+    final displayUrl = (fullUrl != null && fullUrl.isNotEmpty)
+        ? fullUrl
+        : bustUrl;
+    final ImageProvider? imageProvider =
+        (displayUrl != null && displayUrl.isNotEmpty)
+        ? NetworkImage(displayUrl)
+        : null;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: const Color(0x1FFFFFFF),
-        border: Border.all(color: const Color(0x38FFFFFF)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // アバター
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0x44B38246), Color(0x223D5BD4)],
+    return GestureDetector(
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => CastDetailPage(cast: cast))),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          color: const Color(0x1FFFFFFF),
+          border: Border.all(color: const Color(0x38FFFFFF)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 全身画像エリア
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0x44B38246), Color(0x223D5BD4)],
+                  ),
                 ),
-              ),
-              child: avatarImage != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        image: avatarImage,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        name.isNotEmpty ? name[0] : '?',
-                        style: GoogleFonts.raleway(
-                          fontSize: 56,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white.withAlpha(200),
+                child: imageProvider != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          name.isNotEmpty ? name[0] : '?',
+                          style: GoogleFonts.shipporiMincho(
+                            fontSize: 56,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white.withAlpha(200),
+                          ),
                         ),
                       ),
-                    ),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            name,
-            style: GoogleFonts.raleway(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 1.2,
+            const SizedBox(height: 10),
+            Text(
+              name,
+              style: GoogleFonts.shipporiMincho(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: 1.2,
+              ),
             ),
-          ),
-          Text(
-            role,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xFFD4A870),
-              fontWeight: FontWeight.w700,
-              fontSize: 12,
+            Text(
+              role.split(',').map((r) => r.trim()).join(' / '),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: const Color(0xFFD4A870),
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            message,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontSize: 13,
-              color: const Color(0xFFCBCED8),
-              fontStyle: FontStyle.italic,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
