@@ -1,21 +1,37 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/brand_logo.dart';
+import '../services/api_service.dart';
 
-/// キャスト一覧ページ。
-/// 出演キャストのプロフィールをグリッド形式で表示する。
-class CastPage extends StatelessWidget {
+/// キャスト一覧ページ。DBから動的取得して表示する。
+class CastPage extends StatefulWidget {
   const CastPage({super.key});
 
-  static const _casts = [
-    _CastData(name: 'Ren', role: 'MC / Host', message: '「最高の夜を一緒に作ろう。」'),
-    _CastData(name: 'Sora', role: 'DJ / Host', message: '「音楽がすべてを繋ぐ。」'),
-    _CastData(name: 'Kai', role: 'Host', message: '「あなたの笑顔が僕の原動力。」'),
-    _CastData(name: 'Ryuu', role: 'Host', message: '「全力で盛り上げます。」'),
-    _CastData(name: 'Noa', role: 'Host', message: '「一瞬一瞬を大切に。」'),
-    _CastData(name: 'Shun', role: 'Host', message: '「また会いたいと思わせる夜を。」'),
-  ];
+  @override
+  State<CastPage> createState() => _CastPageState();
+}
+
+class _CastPageState extends State<CastPage> {
+  List<Map<String, dynamic>> _casts = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    final casts = await ApiService.getCasts();
+    if (mounted) setState(() {
+      _casts = casts;
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,23 +67,42 @@ class CastPage extends StatelessWidget {
                       ]),
                     ),
                   ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding,
-                    ),
-                    sliver: SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 14,
-                        mainAxisSpacing: 14,
-                        childAspectRatio: 0.78,
+                  if (_loading)
+                    const SliverFillRemaining(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFD4A870),
+                        ),
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => _CastCard(cast: _casts[index]),
-                        childCount: _casts.length,
+                    )
+                  else if (_casts.isEmpty)
+                    const SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          'Coming Soon...',
+                          style: TextStyle(color: Colors.white54, fontSize: 16),
+                        ),
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                      ),
+                      sliver: SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 14,
+                          mainAxisSpacing: 14,
+                          childAspectRatio: 0.78,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) =>
+                              _CastCard(cast: _casts[index]),
+                          childCount: _casts.length,
+                        ),
                       ),
                     ),
-                  ),
                   const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
                 ],
               );
@@ -77,22 +112,6 @@ class CastPage extends StatelessWidget {
       ),
     );
   }
-}
-
-// ---------------------------------------------------------------------------
-// データクラス
-// ---------------------------------------------------------------------------
-
-class _CastData {
-  const _CastData({
-    required this.name,
-    required this.role,
-    required this.message,
-  });
-
-  final String name;
-  final String role;
-  final String message;
 }
 
 // ---------------------------------------------------------------------------
@@ -133,11 +152,29 @@ class _PageHeader extends StatelessWidget {
 class _CastCard extends StatelessWidget {
   const _CastCard({required this.cast});
 
-  final _CastData cast;
+  final Map<String, dynamic> cast;
+
+  ImageProvider? _avatarImage() {
+    final url = cast['avatar_url'] as String?;
+    if (url == null || url.isEmpty) return null;
+    if (url.startsWith('data:')) {
+      final comma = url.indexOf(',');
+      if (comma != -1) {
+        try {
+          return MemoryImage(base64Decode(url.substring(comma + 1)));
+        } catch (_) {}
+      }
+    }
+    return NetworkImage(url);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final name = (cast['name'] as String? ?? '').toUpperCase();
+    final role = cast['role'] as String? ?? '';
+    final message = cast['message'] as String? ?? '';
+    final avatarImage = _avatarImage();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -149,7 +186,7 @@ class _CastCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // アバタープレースホルダー
+          // アバター
           Expanded(
             child: Container(
               width: double.infinity,
@@ -161,21 +198,30 @@ class _CastCard extends StatelessWidget {
                   colors: [Color(0x44B38246), Color(0x223D5BD4)],
                 ),
               ),
-              child: Center(
-                child: Text(
-                  cast.name[0],
-                  style: GoogleFonts.raleway(
-                    fontSize: 56,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white.withAlpha(200),
-                  ),
-                ),
-              ),
+              child: avatarImage != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image(
+                        image: avatarImage,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        name.isNotEmpty ? name[0] : '?',
+                        style: GoogleFonts.raleway(
+                          fontSize: 56,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white.withAlpha(200),
+                        ),
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            cast.name.toUpperCase(),
+            name,
             style: GoogleFonts.raleway(
               fontSize: 22,
               fontWeight: FontWeight.w700,
@@ -184,7 +230,7 @@ class _CastCard extends StatelessWidget {
             ),
           ),
           Text(
-            cast.role,
+            role,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: const Color(0xFFD4A870),
               fontWeight: FontWeight.w700,
@@ -193,7 +239,7 @@ class _CastCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            cast.message,
+            message,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 13,
               color: const Color(0xFFCBCED8),

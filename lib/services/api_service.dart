@@ -29,6 +29,22 @@ class ApiService {
     }
   }
 
+  /// キャスト一覧を取得
+  static Future<List<Map<String, dynamic>>> getCasts() async {
+    try {
+      final res = await http
+          .get(Uri.parse('$_base/api/casts'))
+          .timeout(const Duration(seconds: 6));
+      if (res.statusCode == 200) {
+        final list = jsonDecode(res.body) as List<dynamic>;
+        return list.cast<Map<String, dynamic>>();
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
   /// 来店応募を送信
   static Future<void> submitApplication({
     required String vrchatId,
