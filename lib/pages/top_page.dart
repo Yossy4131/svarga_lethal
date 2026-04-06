@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../services/api_service.dart';
 import '../widgets/brand_logo.dart';
 import 'apply_page.dart';
 import 'cast_page.dart';
@@ -154,8 +155,45 @@ class _HeroBrandBlock extends StatelessWidget {
   }
 }
 
-class _HeroVisualCard extends StatelessWidget {
+class _HeroVisualCard extends StatefulWidget {
   const _HeroVisualCard();
+
+  @override
+  State<_HeroVisualCard> createState() => _HeroVisualCardState();
+}
+
+class _HeroVisualCardState extends State<_HeroVisualCard> {
+  Map<String, dynamic>? _event;
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    final event = await ApiService.getNextEvent();
+    if (mounted) {
+      setState(() {
+        _event = event;
+        _loaded = true;
+      });
+    }
+  }
+
+  String _formatDate(String? dateStr) {
+    if (dateStr == null) return 'Coming Soon...';
+    try {
+      final dt = DateTime.parse(dateStr).toLocal();
+      const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+      final wday = weekdays[dt.weekday - 1];
+      return '${dt.year}.${dt.month.toString().padLeft(2, '0')}'
+          '.${dt.day.toString().padLeft(2, '0')} ($wday)';
+    } catch (_) {
+      return dateStr;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,15 +222,40 @@ class _HeroVisualCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            'Coming Soon...',
-            style: GoogleFonts.raleway(
-              fontSize: 38,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 2,
+          if (!_loaded)
+            const SizedBox(
+              height: 42,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: CircularProgressIndicator(
+                  color: Colors.white54,
+                  strokeWidth: 2,
+                ),
+              ),
+            )
+          else
+            Text(
+              _event != null
+                  ? _formatDate(_event!['event_date'] as String?)
+                  : 'Coming Soon...',
+              style: GoogleFonts.raleway(
+                fontSize: 38,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: 2,
+              ),
             ),
-          ),
+          if (_loaded && _event != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                _event!['title'] as String? ?? '',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFFB38246),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/brand_logo.dart';
+import '../services/api_service.dart';
 
 const _prohibited = [
   'Discord含む無断配信や録画・録音',
@@ -29,6 +30,7 @@ class _ApplyPageState extends State<ApplyPage> {
   final List<bool> _agreements = List<bool>.filled(6, false);
 
   bool _submitted = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -38,6 +40,7 @@ class _ApplyPageState extends State<ApplyPage> {
   }
 
   void _submit() {
+    if (_isSubmitting) return;
     if (!_formKey.currentState!.validate()) return;
     if (_agreements.contains(false)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -48,7 +51,29 @@ class _ApplyPageState extends State<ApplyPage> {
       );
       return;
     }
-    setState(() => _submitted = true);
+    _doSubmit();
+  }
+
+  Future<void> _doSubmit() async {
+    setState(() => _isSubmitting = true);
+    try {
+      await ApiService.submitApplication(
+        vrchatId: _vrChatIdController.text.trim(),
+        xId: _xIdController.text.trim(),
+      );
+      if (mounted) setState(() => _submitted = true);
+    } on ApiException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message),
+            backgroundColor: const Color(0xFF171D5C),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
   @override
@@ -91,6 +116,7 @@ class _ApplyPageState extends State<ApplyPage> {
                                 vrChatIdController: _vrChatIdController,
                                 xIdController: _xIdController,
                                 agreements: _agreements,
+                                isSubmitting: _isSubmitting,
                                 onAgreementChanged: (i, v) =>
                                     setState(() => _agreements[i] = v),
                                 onSubmit: _submit,
@@ -150,6 +176,7 @@ class _ApplyForm extends StatelessWidget {
     required this.vrChatIdController,
     required this.xIdController,
     required this.agreements,
+    required this.isSubmitting,
     required this.onAgreementChanged,
     required this.onSubmit,
   });
@@ -158,6 +185,7 @@ class _ApplyForm extends StatelessWidget {
   final TextEditingController vrChatIdController;
   final TextEditingController xIdController;
   final List<bool> agreements;
+  final bool isSubmitting;
   final void Function(int, bool) onAgreementChanged;
   final VoidCallback onSubmit;
 
@@ -210,7 +238,7 @@ class _ApplyForm extends StatelessWidget {
             width: double.infinity,
             child: FilledButton(
               key: const ValueKey('apply-submit-btn'),
-              onPressed: onSubmit,
+              onPressed: isSubmitting ? null : onSubmit,
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFB38246),
                 padding: const EdgeInsets.symmetric(vertical: 18),
@@ -222,7 +250,16 @@ class _ApplyForm extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              child: const Text('応募する'),
+              child: isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text('応募する'),
             ),
           ),
         ],
