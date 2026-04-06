@@ -249,6 +249,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'NEXT SHOWCASE',
