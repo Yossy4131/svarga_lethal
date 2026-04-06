@@ -9,8 +9,8 @@ class ApiException implements Exception {
 }
 
 class ApiService {
-  // Workers APIのURLをデプロイ後に書き換えてください
-  static const String _base = 'https://svarga-api.YOUR_SUBDOMAIN.workers.dev';
+  static const String _base =
+      'https://svarga-admin-api.y-yoshida1031.workers.dev';
 
   /// 次回開催イベントを取得（null = Coming Soon）
   static Future<Map<String, dynamic>?> getNextEvent() async {
