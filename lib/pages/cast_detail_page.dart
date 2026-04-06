@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/app_colors.dart';
 import '../widgets/brand_logo.dart';
 
 /// キャスト詳細ページ。胸上画像をメインに表示する。
@@ -27,13 +28,7 @@ class CastDetailPage extends StatelessWidget {
 
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B0F2E), Color(0xFF111850), Color(0xFF171D5C)],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -211,7 +206,7 @@ class _BustImageFrame extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0x44B38246), Color(0x223D5BD4)],
+            colors: [AppColors.ambientGold, Color(0x223D5BD4)],
           ),
           border: Border.all(color: const Color(0x38FFFFFF)),
         ),
@@ -282,7 +277,7 @@ class _InfoColumn extends StatelessWidget {
           Text(
             role.split(',').map((r) => r.trim()).join(' / '),
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xFFD4A870),
+              color: AppColors.goldLight,
               fontWeight: FontWeight.w700,
               fontSize: 14,
             ),
@@ -304,7 +299,7 @@ class _InfoColumn extends StatelessWidget {
             message,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 15,
-              color: const Color(0xFFCBCED8),
+              color: AppColors.silver,
               height: 1.7,
             ),
           ),
@@ -329,7 +324,7 @@ class _InfoColumn extends StatelessWidget {
               height: 160,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFB38246), width: 1.5),
+                border: Border.all(color: AppColors.gold, width: 1.5),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),

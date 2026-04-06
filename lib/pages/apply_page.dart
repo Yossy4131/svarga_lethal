@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/app_colors.dart';
 import '../widgets/brand_logo.dart';
 import '../services/api_service.dart';
 
@@ -85,7 +86,7 @@ class _ApplyPageState extends State<ApplyPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('全ての禁止事項に同意してください'),
-          backgroundColor: Color(0xFF171D5C),
+          backgroundColor: AppColors.navyDeep,
         ),
       );
       return;
@@ -106,7 +107,7 @@ class _ApplyPageState extends State<ApplyPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.message),
-            backgroundColor: const Color(0xFF171D5C),
+            backgroundColor: AppColors.navyDeep,
           ),
         );
       }
@@ -121,13 +122,7 @@ class _ApplyPageState extends State<ApplyPage> {
 
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B0F2E), Color(0xFF111850), Color(0xFF171D5C)],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -153,7 +148,7 @@ class _ApplyPageState extends State<ApplyPage> {
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 60),
                                   child: CircularProgressIndicator(
-                                    color: Color(0xFFD4A870),
+                                    color: AppColors.goldLight,
                                   ),
                                 ),
                               )
@@ -264,11 +259,11 @@ class _ApplyForm extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           _FormField(
-            label: 'VRChat ID',
-            hint: 'example_user',
+            label: 'VRChat名',
+            hint: '例: LETHALFREET（日本語可）',
             controller: vrChatIdController,
             validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'VRChat IDを入力してください' : null,
+                (v == null || v.trim().isEmpty) ? 'VRChat名を入力してください' : null,
           ),
           const SizedBox(height: 18),
           _FormField(
@@ -290,7 +285,7 @@ class _ApplyForm extends StatelessWidget {
               key: const ValueKey('apply-submit-btn'),
               onPressed: isSubmitting ? null : onSubmit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFB38246),
+                backgroundColor: AppColors.gold,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 textStyle: GoogleFonts.shipporiMincho(
                   fontSize: 16,
@@ -338,16 +333,14 @@ class _ProhibitedAgreementSection extends StatelessWidget {
           'PROHIBITED',
           style: theme.textTheme.titleMedium?.copyWith(
             letterSpacing: 1.2,
-            color: const Color(0xFFD4A870),
+            color: AppColors.goldLight,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           'イベント内禁止事項に全て同意してから応募してください',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: const Color(0xFF8C90A1),
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted),
         ),
         const SizedBox(height: 12),
         Container(
@@ -355,7 +348,7 @@ class _ProhibitedAgreementSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            color: const Color(0x1AFFFFFF),
+            color: AppColors.cardBg,
             border: Border.all(color: const Color(0x38FFFFFF)),
           ),
           child: Column(
@@ -369,7 +362,7 @@ class _ProhibitedAgreementSection extends StatelessWidget {
                     style: theme.textTheme.bodyMedium,
                   ),
                   controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: const Color(0xFFB38246),
+                  activeColor: AppColors.gold,
                   checkColor: Colors.white,
                   contentPadding: EdgeInsets.zero,
                   dense: true,
@@ -381,7 +374,7 @@ class _ProhibitedAgreementSection extends StatelessWidget {
         Text(
           '1回は注意、同じことを繰り返すと退店になる可能性があります。',
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: const Color(0xFF8C90A1),
+            color: AppColors.muted,
             fontSize: 13,
           ),
         ),
@@ -413,7 +406,7 @@ class _FormField extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: const Color(0xFFD4A870),
+            color: AppColors.goldLight,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -425,10 +418,10 @@ class _FormField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xFF5A5F72),
+              color: AppColors.mutedDark,
             ),
             filled: true,
-            fillColor: const Color(0x1AFFFFFF),
+            fillColor: AppColors.cardBg,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 14,
@@ -443,17 +436,17 @@ class _FormField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFB38246), width: 2),
+              borderSide: const BorderSide(color: AppColors.gold, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFFF6B6B)),
+              borderSide: const BorderSide(color: AppColors.red),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFFF6B6B), width: 2),
+              borderSide: const BorderSide(color: AppColors.red, width: 2),
             ),
-            errorStyle: const TextStyle(color: Color(0xFFFF6B6B)),
+            errorStyle: const TextStyle(color: AppColors.red),
           ),
         ),
       ],
@@ -501,7 +494,7 @@ class _ClosedCard extends StatelessWidget {
         children: [
           const Icon(
             Icons.hourglass_empty_rounded,
-            color: Color(0xFFB38246),
+            color: AppColors.gold,
             size: 56,
           ),
           const SizedBox(height: 20),
@@ -518,9 +511,7 @@ class _ClosedCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             '次回開催日をお待ちください',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: const Color(0xFFCBCED8),
-            ),
+            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.silver),
             textAlign: TextAlign.center,
           ),
           if (eventDate != null) ...[
@@ -539,7 +530,7 @@ class _ClosedCard extends StatelessWidget {
                     style: GoogleFonts.shipporiMincho(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF93ABE8),
+                      color: AppColors.blueLight,
                       letterSpacing: 2,
                     ),
                   ),
@@ -558,7 +549,7 @@ class _ClosedCard extends StatelessWidget {
                     Text(
                       '募集期間: ${_formatDate(startStr)} 〜 ${_formatDate(endStr)}',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFFD4A870),
+                        color: AppColors.goldLight,
                         fontSize: 13,
                       ),
                       textAlign: TextAlign.center,
@@ -602,7 +593,7 @@ class _ThankYouCard extends StatelessWidget {
         children: [
           const Icon(
             Icons.check_circle_outline,
-            color: Color(0xFF5B7DE8),
+            color: AppColors.blue,
             size: 64,
           ),
           const SizedBox(height: 20),

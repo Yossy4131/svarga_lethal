@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/app_colors.dart';
 import '../services/api_service.dart';
 import '../widgets/brand_logo.dart';
 import 'apply_page.dart';
@@ -16,24 +17,24 @@ class TopPage extends StatelessWidget {
     return Scaffold(
       endDrawer: const _SiteDrawer(),
       body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B0F2E), Color(0xFF111850), Color(0xFF171D5C)],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
         child: Stack(
           children: [
             const Positioned(
               top: -140,
               right: -80,
-              child: _AmbientCircle(diameter: 360, color: Color(0x44B38246)),
+              child: _AmbientCircle(
+                diameter: 360,
+                color: AppColors.ambientGold,
+              ),
             ),
             const Positioned(
               bottom: -170,
               left: -120,
-              child: _AmbientCircle(diameter: 420, color: Color(0x335B7DE8)),
+              child: _AmbientCircle(
+                diameter: 420,
+                color: AppColors.ambientBlue,
+              ),
             ),
             SafeArea(
               child: LayoutBuilder(
@@ -59,7 +60,7 @@ class TopPage extends StatelessWidget {
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: const Color(0xFF8C90A1)),
+                                ?.copyWith(color: AppColors.muted),
                           ),
                         ],
                       ),
@@ -78,39 +79,6 @@ class TopPage extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // 内部Widgets（TopPage専用）
 // ---------------------------------------------------------------------------
-
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.isWide});
-
-  // ignore: unused_field
-  final bool isWide;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Builder(
-        builder: (context) => InkWell(
-          onTap: () => Scaffold.of(context).openEndDrawer(),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0x22FFFFFF),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x44FFFFFF)),
-            ),
-            child: const Icon(
-              Icons.menu_rounded,
-              color: Colors.white,
-              size: 22,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _HeroBrandBlock extends StatelessWidget {
   const _HeroBrandBlock({required this.compact});
@@ -142,8 +110,8 @@ class _HeroBrandBlock extends StatelessWidget {
                   begin: Alignment.centerRight,
                   end: Alignment.centerLeft,
                   colors: [
-                    const Color(0xFF0B0F2E).withAlpha(30),
-                    const Color(0xFF0B0F2E).withAlpha(180),
+                    AppColors.navy.withAlpha(30),
+                    AppColors.navy.withAlpha(180),
                   ],
                 ),
               ),
@@ -266,7 +234,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
           end: Alignment.bottomCenter,
           colors: [Color(0x33FFFFFF), Color(0x14FFFFFF)],
         ),
-        border: Border.all(color: const Color(0x4DFFFFFF)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,7 +244,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
           Text(
             'NEXT SHOWCASE',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xFF93ABE8),
+              color: AppColors.blueLight,
               fontWeight: FontWeight.w700,
               letterSpacing: 1,
             ),
@@ -316,7 +284,7 @@ class _HeroVisualCardState extends State<_HeroVisualCard> {
                 style: GoogleFonts.shipporiMincho(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFFB38246),
+                  color: AppColors.gold,
                   letterSpacing: 1.5,
                 ),
               ),
@@ -344,7 +312,7 @@ class _NavigationRow extends StatelessWidget {
       icon: Icons.people_alt_outlined,
       label: 'CAST',
       sublabel: 'キャスト一覧',
-      accentColor: const Color(0xFF5B7DE8),
+      accentColor: AppColors.blue,
       onTap: () => Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => const CastPage())),
@@ -355,7 +323,7 @@ class _NavigationRow extends StatelessWidget {
       icon: Icons.edit_calendar_outlined,
       label: 'APPLY',
       sublabel: '来店応募',
-      accentColor: const Color(0xFFB38246),
+      accentColor: AppColors.gold,
       onTap: () => Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => const ApplyPage())),
@@ -415,7 +383,7 @@ class _NavButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: const Color(0x1AFFFFFF),
+          color: AppColors.cardBg,
           border: Border.all(color: accentColor.withAlpha(80)),
         ),
         child: Column(
@@ -573,9 +541,7 @@ class _GallerySlideshowState extends State<_GallerySlideshow> {
               height: 7,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: _current == i
-                    ? const Color(0xFFB38246)
-                    : const Color(0x55FFFFFF),
+                color: _current == i ? AppColors.gold : const Color(0x55FFFFFF),
               ),
             ),
           ),
@@ -601,7 +567,7 @@ class _SiteDrawer extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0B0F2E), Color(0xFF171D5C)],
+            colors: [AppColors.navy, AppColors.navyDeep],
           ),
         ),
         child: SafeArea(
@@ -638,13 +604,13 @@ class _SiteDrawer extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(color: Color(0x33FFFFFF)),
+              const Divider(color: AppColors.cardBorderLight),
               const SizedBox(height: 8),
               _DrawerItem(
                 icon: Icons.people_alt_outlined,
                 label: 'CAST',
                 sublabel: 'キャスト一覧',
-                accentColor: const Color(0xFF5B7DE8),
+                accentColor: AppColors.blue,
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
@@ -656,7 +622,7 @@ class _SiteDrawer extends StatelessWidget {
                 icon: Icons.edit_calendar_outlined,
                 label: 'APPLY',
                 sublabel: '来店応募',
-                accentColor: const Color(0xFFB38246),
+                accentColor: AppColors.gold,
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(

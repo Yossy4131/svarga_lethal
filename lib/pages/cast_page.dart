@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/app_colors.dart';
 import '../widgets/brand_logo.dart';
 import '../services/api_service.dart';
 import 'cast_detail_page.dart';
@@ -39,13 +40,7 @@ class _CastPageState extends State<CastPage> {
 
     return Scaffold(
       body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF0B0F2E), Color(0xFF111850), Color(0xFF171D5C)],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -82,7 +77,7 @@ class _CastPageState extends State<CastPage> {
                     const SliverFillRemaining(
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Color(0xFFD4A870),
+                          color: AppColors.goldLight,
                         ),
                       ),
                     )
@@ -202,7 +197,7 @@ class _CastCard extends StatelessWidget {
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0x44B38246), Color(0x223D5BD4)],
+                    colors: [AppColors.ambientGold, Color(0x223D5BD4)],
                   ),
                 ),
                 child: imageProvider != null
@@ -239,7 +234,7 @@ class _CastCard extends StatelessWidget {
             Text(
               role.split(',').map((r) => r.trim()).join(' / '),
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFFD4A870),
+                color: AppColors.goldLight,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
