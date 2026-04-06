@@ -23,10 +23,8 @@ class ApplyPage extends StatefulWidget {
 
 class _ApplyPageState extends State<ApplyPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _kanaController = TextEditingController();
-  final _countController = TextEditingController();
-  final _messageController = TextEditingController();
+  final _vrChatIdController = TextEditingController();
+  final _xIdController = TextEditingController();
 
   final List<bool> _agreements = List<bool>.filled(6, false);
 
@@ -34,10 +32,8 @@ class _ApplyPageState extends State<ApplyPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _kanaController.dispose();
-    _countController.dispose();
-    _messageController.dispose();
+    _vrChatIdController.dispose();
+    _xIdController.dispose();
     super.dispose();
   }
 
@@ -92,10 +88,8 @@ class _ApplyPageState extends State<ApplyPage> {
                             ? _ThankYouCard(theme: theme)
                             : _ApplyForm(
                                 formKey: _formKey,
-                                nameController: _nameController,
-                                kanaController: _kanaController,
-                                countController: _countController,
-                                messageController: _messageController,
+                                vrChatIdController: _vrChatIdController,
+                                xIdController: _xIdController,
                                 agreements: _agreements,
                                 onAgreementChanged: (i, v) =>
                                     setState(() => _agreements[i] = v),
@@ -153,20 +147,16 @@ class _PageHeader extends StatelessWidget {
 class _ApplyForm extends StatelessWidget {
   const _ApplyForm({
     required this.formKey,
-    required this.nameController,
-    required this.kanaController,
-    required this.countController,
-    required this.messageController,
+    required this.vrChatIdController,
+    required this.xIdController,
     required this.agreements,
     required this.onAgreementChanged,
     required this.onSubmit,
   });
 
   final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController kanaController;
-  final TextEditingController countController;
-  final TextEditingController messageController;
+  final TextEditingController vrChatIdController;
+  final TextEditingController xIdController;
   final List<bool> agreements;
   final void Function(int, bool) onAgreementChanged;
   final VoidCallback onSubmit;
@@ -196,38 +186,19 @@ class _ApplyForm extends StatelessWidget {
           ),
           const SizedBox(height: 28),
           _FormField(
-            label: 'お名前',
-            hint: '山田 太郎',
-            controller: nameController,
+            label: 'VRChat ID',
+            hint: 'example_user',
+            controller: vrChatIdController,
             validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'お名前を入力してください' : null,
+                (v == null || v.trim().isEmpty) ? 'VRChat IDを入力してください' : null,
           ),
           const SizedBox(height: 18),
           _FormField(
-            label: 'フリガナ',
-            hint: 'ヤマダ タロウ',
-            controller: kanaController,
+            label: 'X ID',
+            hint: '@example',
+            controller: xIdController,
             validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'フリガナを入力してください' : null,
-          ),
-          const SizedBox(height: 18),
-          _FormField(
-            label: '来店人数',
-            hint: '例：2',
-            controller: countController,
-            keyboardType: TextInputType.number,
-            validator: (v) {
-              if (v == null || v.trim().isEmpty) return '来店人数を入力してください';
-              if (int.tryParse(v.trim()) == null) return '半角数字で入力してください';
-              return null;
-            },
-          ),
-          const SizedBox(height: 18),
-          _FormField(
-            label: 'メッセージ（任意）',
-            hint: 'ご要望やご質問があれば...',
-            controller: messageController,
-            maxLines: 4,
+                (v == null || v.trim().isEmpty) ? 'X IDを入力してください' : null,
           ),
           const SizedBox(height: 28),
           _ProhibitedAgreementSection(
@@ -338,16 +309,12 @@ class _FormField extends StatelessWidget {
     required this.hint,
     required this.controller,
     this.validator,
-    this.maxLines = 1,
-    this.keyboardType,
   });
 
   final String label;
   final String hint;
   final TextEditingController controller;
   final String? Function(String?)? validator;
-  final int maxLines;
-  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -367,8 +334,6 @@ class _FormField extends StatelessWidget {
         TextFormField(
           controller: controller,
           validator: validator,
-          maxLines: maxLines,
-          keyboardType: keyboardType,
           style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
