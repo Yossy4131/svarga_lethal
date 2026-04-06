@@ -14,13 +14,11 @@ void main() {
     expect(find.byType(BrandLogo), findsAtLeastNWidgets(1));
   });
 
-  testWidgets('TopPage: 主要コンテンツ・次回開催日・注意事項・遷移ボタンが描画される', (tester) async {
+  testWidgets('TopPage: 次回開催日・遗移ボタンが描画される', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: TopPage()));
     await tester.pump();
 
     expect(find.text('Coming Soon...'), findsOneWidget);
-    // 禁止事項
-    expect(find.text('PROHIBITED'), findsOneWidget);
     // 遷移ボタン
     expect(find.byKey(const ValueKey('nav-cast-btn')), findsOneWidget);
     expect(find.byKey(const ValueKey('nav-apply-btn')), findsOneWidget);
@@ -35,11 +33,12 @@ void main() {
     expect(find.byIcon(Icons.arrow_back_ios_new), findsOneWidget);
   });
 
-  testWidgets('ApplyPage: フォームと送信ボタンが表示される', (tester) async {
+  testWidgets('ApplyPage: フォーム・禁止事項・送信ボタンが表示される', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: ApplyPage()));
     await tester.pump();
 
     expect(find.text('APPLY'), findsOneWidget);
+    expect(find.text('PROHIBITED'), findsOneWidget);
     expect(find.byKey(const ValueKey('apply-submit-btn')), findsOneWidget);
     expect(find.text('応募する'), findsOneWidget);
   });

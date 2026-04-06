@@ -3,6 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/brand_logo.dart';
 
+const _prohibited = [
+  'Discord含む無断配信や録画・録音',
+  'スタッフ・キャストへのお客様からの接触',
+  '他のお客様に対する迷惑行為',
+  'キャスト・お客様双方のフレンド申請',
+  '過度なパーティクルや他者の視界・音声に影響を及ぼすもの',
+  'そのほかスタッフ・キャストが迷惑と判断した行為',
+];
+
 /// 来店応募ページ。
 /// イベントへの来店申込フォームを提供する。
 class ApplyPage extends StatefulWidget {
@@ -19,6 +28,8 @@ class _ApplyPageState extends State<ApplyPage> {
   final _countController = TextEditingController();
   final _messageController = TextEditingController();
 
+  final List<bool> _agreements = List<bool>.filled(6, false);
+
   bool _submitted = false;
 
   @override
@@ -31,9 +42,17 @@ class _ApplyPageState extends State<ApplyPage> {
   }
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _submitted = true);
+    if (!_formKey.currentState!.validate()) return;
+    if (_agreements.contains(false)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('全ての禁止事項に同意してください'),
+          backgroundColor: Color(0xFF171D5C),
+        ),
+      );
+      return;
     }
+    setState(() => _submitted = true);
   }
 
   @override
@@ -77,6 +96,9 @@ class _ApplyPageState extends State<ApplyPage> {
                                 kanaController: _kanaController,
                                 countController: _countController,
                                 messageController: _messageController,
+                                agreements: _agreements,
+                                onAgreementChanged: (i, v) =>
+                                    setState(() => _agreements[i] = v),
                                 onSubmit: _submit,
                               ),
                       ),
@@ -135,6 +157,8 @@ class _ApplyForm extends StatelessWidget {
     required this.kanaController,
     required this.countController,
     required this.messageController,
+    required this.agreements,
+    required this.onAgreementChanged,
     required this.onSubmit,
   });
 
@@ -143,6 +167,8 @@ class _ApplyForm extends StatelessWidget {
   final TextEditingController kanaController;
   final TextEditingController countController;
   final TextEditingController messageController;
+  final List<bool> agreements;
+  final void Function(int, bool) onAgreementChanged;
   final VoidCallback onSubmit;
 
   @override
@@ -204,6 +230,11 @@ class _ApplyForm extends StatelessWidget {
             maxLines: 4,
           ),
           const SizedBox(height: 28),
+          _ProhibitedAgreementSection(
+            agreements: agreements,
+            onChanged: onAgreementChanged,
+          ),
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
@@ -225,6 +256,78 @@ class _ApplyForm extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProhibitedAgreementSection extends StatelessWidget {
+  const _ProhibitedAgreementSection({
+    required this.agreements,
+    required this.onChanged,
+  });
+
+  final List<bool> agreements;
+  final void Function(int, bool) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'PROHIBITED',
+          style: theme.textTheme.titleMedium?.copyWith(
+            letterSpacing: 1.2,
+            color: const Color(0xFFD4A870),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'イベント内禁止事項に全て同意してから応募してください',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: const Color(0xFF8C90A1),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: const Color(0x1AFFFFFF),
+            border: Border.all(color: const Color(0x38FFFFFF)),
+          ),
+          child: Column(
+            children: [
+              for (var i = 0; i < _prohibited.length; i++)
+                CheckboxListTile(
+                  value: agreements[i],
+                  onChanged: (v) => onChanged(i, v ?? false),
+                  title: Text(
+                    _prohibited[i],
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: const Color(0xFFB38246),
+                  checkColor: Colors.white,
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '1回は注意、同じことを繰り返すと退店になる可能性があります。',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: const Color(0xFF8C90A1),
+            fontSize: 13,
+          ),
+        ),
+      ],
     );
   }
 }

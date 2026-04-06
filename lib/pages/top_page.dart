@@ -51,11 +51,9 @@ class TopPage extends StatelessWidget {
                         children: [
                           _TopBar(isWide: isWide),
                           const SizedBox(height: 48),
-                          _HeroSection(isWide: isWide),
+                          _HeroBrandBlock(compact: !isWide),
                           const SizedBox(height: 34),
-                          _NavigationButtons(isWide: isWide),
-                          const SizedBox(height: 34),
-                          const _NoticeSection(),
+                          _NavigationRow(isWide: isWide),
                           const SizedBox(height: 30),
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
@@ -110,33 +108,6 @@ class _TopBar extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _HeroSection extends StatelessWidget {
-  const _HeroSection({required this.isWide});
-
-  final bool isWide;
-
-  @override
-  Widget build(BuildContext context) {
-    return isWide
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Expanded(flex: 3, child: _HeroBrandBlock(compact: false)),
-              const SizedBox(width: 40),
-              const Expanded(flex: 2, child: _HeroVisualCard()),
-            ],
-          )
-        : const Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _HeroBrandBlock(compact: true),
-              SizedBox(height: 28),
-              _HeroVisualCard(),
-            ],
-          );
   }
 }
 
@@ -229,117 +200,11 @@ class _HeroVisualCard extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// イベント内禁止事項セクション
+// ナビゲーションボタン（キャスト一覧 / 来店応募 / 次回開催日）
 // ---------------------------------------------------------------------------
 
-class _NoticeSection extends StatelessWidget {
-  const _NoticeSection();
-
-  static const _notices = [
-    'Discord含む無断配信や録画・録音',
-    'スタッフ・キャストへのお客様からの接触',
-    '他のお客様に対する迷惑行為',
-    'キャスト・お客様双方のフレンド申請',
-    '過度なパーティクルや他者の視界・音声に影響を及ぼすもの',
-    'そのほかスタッフ・キャストが迷惑と判断した行為',
-  ];
-
-  static const _footer = '1回は注意、同じことを繰り返すと退店になる可能性があります';
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'PROHIBITED',
-          style: theme.textTheme.titleMedium?.copyWith(
-            letterSpacing: 1.2,
-            color: const Color(0xFFD4A870),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'イベント内禁止事項',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: const Color(0xFF8C90A1),
-          ),
-        ),
-        const SizedBox(height: 14),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            color: const Color(0x1AFFFFFF),
-            border: Border.all(color: const Color(0x38FFFFFF)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var i = 0; i < _notices.length; i++) ...[
-                _NoticeItem(number: i + 1, text: _notices[i]),
-                if (i != _notices.length - 1)
-                  const Divider(color: Color(0x2AFFFFFF), height: 24),
-              ],
-              const Divider(color: Color(0x2AFFFFFF), height: 28),
-              Text(_footer, style: theme.textTheme.bodyMedium),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _NoticeItem extends StatelessWidget {
-  const _NoticeItem({required this.number, required this.text});
-
-  final int number;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0x44B38246),
-            border: Border.all(color: const Color(0x66B38246)),
-          ),
-          child: Center(
-            child: Text(
-              '$number',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFFD4A870),
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
-      ],
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// ナビゲーションボタン（キャスト一覧 / 来店応募）
-// ---------------------------------------------------------------------------
-
-class _NavigationButtons extends StatelessWidget {
-  const _NavigationButtons({required this.isWide});
+class _NavigationRow extends StatelessWidget {
+  const _NavigationRow({required this.isWide});
 
   final bool isWide;
 
@@ -368,15 +233,26 @@ class _NavigationButtons extends StatelessWidget {
     );
 
     return isWide
-        ? Row(
-            children: [
-              Expanded(child: castButton),
-              const SizedBox(width: 14),
-              Expanded(child: applyButton),
-            ],
+        ? IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Expanded(child: _HeroVisualCard()),
+                const SizedBox(width: 14),
+                Expanded(child: castButton),
+                const SizedBox(width: 14),
+                Expanded(child: applyButton),
+              ],
+            ),
           )
         : Column(
-            children: [castButton, const SizedBox(height: 14), applyButton],
+            children: [
+              const _HeroVisualCard(),
+              const SizedBox(height: 14),
+              castButton,
+              const SizedBox(height: 14),
+              applyButton,
+            ],
           );
   }
 }
