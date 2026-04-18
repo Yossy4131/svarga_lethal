@@ -126,13 +126,13 @@ class _WideLayout extends StatelessWidget {
       children: [
         // 胸上画像
         Expanded(
-          flex: 5,
+          flex: 2,
           child: _BustImageFrame(bustImage: bustImage, name: name),
         ),
         const SizedBox(width: 48),
         // テキスト情報 + 全身サムネイル
         Expanded(
-          flex: 4,
+          flex: 5,
           child: _InfoColumn(
             name: name,
             role: role,
@@ -172,7 +172,12 @@ class _NarrowLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _BustImageFrame(bustImage: bustImage, name: name),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 280),
+            child: _BustImageFrame(bustImage: bustImage, name: name),
+          ),
+        ),
         const SizedBox(height: 28),
         _InfoColumn(
           name: name,

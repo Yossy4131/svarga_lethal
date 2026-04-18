@@ -46,7 +46,7 @@ class _CastPageState extends State<CastPage> {
             builder: (context, constraints) {
               final isWide = constraints.maxWidth > 900;
               final horizontalPadding = isWide ? 72.0 : 24.0;
-              final crossAxisCount = isWide ? 3 : 2;
+              final crossAxisCount = isWide ? 5 : 2;
 
               // 9:16 画像を正確に収めるセル高さを計算
               final cellWidth =
@@ -57,7 +57,7 @@ class _CastPageState extends State<CastPage> {
               final imageWidth = cellWidth - 24.0; // カード内パディング 12px × 2
               final imageHeight = imageWidth * 16.0 / 9.0;
               // セル高さ = 上パディング + 画像 + gap + 名前 + 役職 + 下パディング
-              final cellHeight = 12.0 + imageHeight + 10.0 + 28.0 + 22.0 + 12.0;
+              final cellHeight = 12.0 + imageHeight + 8.0 + 22.0 + 18.0 + 12.0;
 
               return CustomScrollView(
                 slivers: [
@@ -225,7 +225,7 @@ class _CastCard extends StatelessWidget {
             Text(
               name,
               style: GoogleFonts.shipporiMincho(
-                fontSize: 20,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
                 letterSpacing: 1.2,
@@ -236,7 +236,7 @@ class _CastCard extends StatelessWidget {
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: AppColors.goldLight,
                 fontWeight: FontWeight.w700,
-                fontSize: 12,
+                fontSize: 10,
               ),
             ),
           ],
