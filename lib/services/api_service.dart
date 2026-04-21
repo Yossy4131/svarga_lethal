@@ -51,7 +51,7 @@ class ApiService {
   static Future<Map<String, dynamic>?> _fetchNextEvent() async {
     try {
       final res = await http
-          .get(Uri.parse('$_base/api/events/next'))
+          .get(Uri.parse('$_base/api/schedule/next'))
           .timeout(const Duration(seconds: 6));
       if (res.statusCode == 200) {
         final body = jsonDecode(res.body);
