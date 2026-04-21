@@ -12,6 +12,7 @@ const _prohibited = [
   'キャスト・お客様双方のフレンド申請',
   '過度なパーティクルや他者の視界・音声に影響を及ぼすもの',
   'そのほかスタッフ・キャストが迷惑と判断した行為',
+  '写真をHP・X等広報に使用させていただく場合がございます',
 ];
 
 /// 来店応募ページ。
@@ -339,7 +340,7 @@ class _ProhibitedAgreementSection extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'イベント内禁止事項に全て同意してから応募してください',
+          'イベント内禁止事項・確認事項に全て同意してから応募してください',
           style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted),
         ),
         const SizedBox(height: 12),
