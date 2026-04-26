@@ -162,7 +162,10 @@ class _CastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final name = (cast['name'] as String? ?? '').toUpperCase();
+    final rawName = cast['name'] as String? ?? '';
+    final alias = cast['alias'] as String?;
+    final name = ((alias != null && alias.isNotEmpty) ? alias : rawName)
+        .toUpperCase();
     final role = cast['role'] as String? ?? '';
     final fullUrl = cast['avatar_full_url'] as String?;
     final bustUrl = cast['avatar_url'] as String?;
