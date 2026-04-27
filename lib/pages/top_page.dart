@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/x_timeline.dart';
-
 import '../constants/app_colors.dart';
 import '../services/api_service.dart';
 import '../widgets/brand_logo.dart';
@@ -61,8 +59,6 @@ class TopPage extends StatelessWidget {
                           const _GallerySlideshow(),
                           const SizedBox(height: 30),
                           const _XFollowCard(),
-                          const SizedBox(height: 12),
-                          const XTimeline(),
                           const SizedBox(height: 12),
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
