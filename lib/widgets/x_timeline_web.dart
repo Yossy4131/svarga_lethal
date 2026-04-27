@@ -15,38 +15,53 @@ class _XTimelineState extends State<XTimeline> {
   static bool _registered = false;
   static const String _viewType = 'svarga-x-timeline';
 
+  /// blob: URL を生成（Flutter service workerをバイパス）
+  static String _createBlobUrl() {
+    const htmlContent = '''<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow-x: hidden;
+  }
+</style>
+</head>
+<body>
+  <a
+    class="twitter-timeline"
+    data-theme="dark"
+    data-chrome="noheader nofooter noborders transparent"
+    data-tweet-limit="6"
+    data-dnt="true"
+    href="https://twitter.com/Svarga_Lethal"
+  >Tweets by @Svarga_Lethal</a>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+</html>''';
+    final blob = html.Blob([htmlContent], 'text/html');
+    return html.Url.createObjectUrlFromBlob(blob);
+  }
+
   @override
   void initState() {
     super.initState();
     if (!_registered) {
       _registered = true;
+      final blobUrl = _createBlobUrl();
       ui_web.platformViewRegistry.registerViewFactory(_viewType, (int id) {
-        // 別HTMLファイルではなく直接DOM要素を生成（サービスワーカー問題を回避）
-        final container = html.DivElement()
+        return html.IFrameElement()
+          ..src = blobUrl
+          ..style.border = 'none'
           ..style.width = '100%'
           ..style.height = '100%'
-          ..style.overflowY = 'auto'
-          ..style.background = 'transparent';
-
-        final anchor = html.AnchorElement()
-          ..className = 'twitter-timeline'
-          ..setAttribute('data-theme', 'dark')
-          ..setAttribute(
-            'data-chrome',
-            'noheader nofooter noborders transparent',
-          )
-          ..setAttribute('data-tweet-limit', '6')
-          ..href = 'https://twitter.com/Svarga_Lethal'
-          ..text = 'Tweets by @Svarga_Lethal';
-
-        final script = html.ScriptElement()
-          ..async = true
-          ..charset = 'utf-8'
-          ..src = 'https://platform.twitter.com/widgets.js';
-
-        container.append(anchor);
-        container.append(script);
-        return container;
+          ..style.background = 'transparent'
+          ..setAttribute('scrolling', 'no')
+          ..setAttribute('frameborder', '0')
+          ..setAttribute('allowtransparency', 'true');
       });
     }
   }
