@@ -60,11 +60,9 @@ class TopPage extends StatelessWidget {
                           const SizedBox(height: 44),
                           const _GallerySlideshow(),
                           const SizedBox(height: 30),
-                          _SectionTitle(label: 'X (Twitter)'),
+                          const _XFollowCard(),
                           const SizedBox(height: 12),
                           const XTimeline(),
-                          const SizedBox(height: 30),
-                          const _XLinkButton(),
                           const SizedBox(height: 12),
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
@@ -641,7 +639,10 @@ class _SiteDrawer extends StatelessWidget {
               ),
               const Divider(color: AppColors.cardBorderLight),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -796,34 +797,11 @@ class _AmbientCircle extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// セクション見出し
+// X フォロー誘導カード
 // ---------------------------------------------------------------------------
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: GoogleFonts.shipporiMincho(
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        letterSpacing: 1.5,
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// X (Twitter) リンクボタン
-// ---------------------------------------------------------------------------
-
-class _XLinkButton extends StatelessWidget {
-  const _XLinkButton();
+class _XFollowCard extends StatelessWidget {
+  const _XFollowCard();
 
   @override
   Widget build(BuildContext context) {
@@ -833,37 +811,59 @@ class _XLinkButton extends StatelessWidget {
         mode: LaunchMode.externalApplication,
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           color: AppColors.cardBg,
           border: Border.all(color: AppColors.cardBorder),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'X',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withAlpha(20),
+              ),
+              child: const Center(
+                child: Text(
+                  'X',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(width: 8),
-            Text(
-              '@Svarga_Lethal',
-              style: GoogleFonts.shipporiMincho(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '公式X (Twitter)',
+                    style: GoogleFonts.shipporiMincho(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  const Text(
+                    '@Svarga_Lethal — 最新情報はこちら',
+                    style: TextStyle(color: Colors.white54, fontSize: 13),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 6),
             const Icon(
               Icons.open_in_new_rounded,
               color: Colors.white38,
-              size: 14,
+              size: 18,
             ),
           ],
         ),

@@ -21,15 +21,32 @@ class _XTimelineState extends State<XTimeline> {
     if (!_registered) {
       _registered = true;
       ui_web.platformViewRegistry.registerViewFactory(_viewType, (int id) {
-        return html.IFrameElement()
-          ..src = 'twitter_timeline.html'
-          ..style.border = 'none'
+        // 別HTMLファイルではなく直接DOM要素を生成（サービスワーカー問題を回避）
+        final container = html.DivElement()
           ..style.width = '100%'
           ..style.height = '100%'
-          ..style.background = 'transparent'
-          ..setAttribute('scrolling', 'no')
-          ..setAttribute('frameborder', '0')
-          ..setAttribute('allowtransparency', 'true');
+          ..style.overflowY = 'auto'
+          ..style.background = 'transparent';
+
+        final anchor = html.AnchorElement()
+          ..className = 'twitter-timeline'
+          ..setAttribute('data-theme', 'dark')
+          ..setAttribute(
+            'data-chrome',
+            'noheader nofooter noborders transparent',
+          )
+          ..setAttribute('data-tweet-limit', '6')
+          ..href = 'https://twitter.com/Svarga_Lethal'
+          ..text = 'Tweets by @Svarga_Lethal';
+
+        final script = html.ScriptElement()
+          ..async = true
+          ..charset = 'utf-8'
+          ..src = 'https://platform.twitter.com/widgets.js';
+
+        container.append(anchor);
+        container.append(script);
+        return container;
       });
     }
   }
