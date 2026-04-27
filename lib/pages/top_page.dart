@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../widgets/x_timeline.dart';
 
 import '../constants/app_colors.dart';
 import '../services/api_service.dart';
@@ -57,6 +60,12 @@ class TopPage extends StatelessWidget {
                           const SizedBox(height: 44),
                           const _GallerySlideshow(),
                           const SizedBox(height: 30),
+                          _SectionTitle(label: 'X (Twitter)'),
+                          const SizedBox(height: 12),
+                          const XTimeline(),
+                          const SizedBox(height: 30),
+                          const _XLinkButton(),
+                          const SizedBox(height: 12),
                           Text(
                             '© 2026 Svarga Lethal. All Rights Reserved.',
                             style: Theme.of(context).textTheme.bodyMedium
@@ -630,6 +639,67 @@ class _SiteDrawer extends StatelessWidget {
                   );
                 },
               ),
+              const Divider(color: AppColors.cardBorderLight),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withAlpha(20),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'X',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => launchUrl(
+                          Uri.parse('https://x.com/Svarga_Lethal'),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '@Svarga_Lethal',
+                              style: GoogleFonts.shipporiMincho(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const Text(
+                              '公式Xアカウント',
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.open_in_new_rounded,
+                      color: Colors.white38,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -721,6 +791,83 @@ class _AmbientCircle extends StatelessWidget {
       width: diameter,
       height: diameter,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// セクション見出し
+// ---------------------------------------------------------------------------
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: GoogleFonts.shipporiMincho(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+        letterSpacing: 1.5,
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// X (Twitter) リンクボタン
+// ---------------------------------------------------------------------------
+
+class _XLinkButton extends StatelessWidget {
+  const _XLinkButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => launchUrl(
+        Uri.parse('https://x.com/Svarga_Lethal'),
+        mode: LaunchMode.externalApplication,
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: AppColors.cardBg,
+          border: Border.all(color: AppColors.cardBorder),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'X',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '@Svarga_Lethal',
+              style: GoogleFonts.shipporiMincho(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Icon(
+              Icons.open_in_new_rounded,
+              color: Colors.white38,
+              size: 14,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
