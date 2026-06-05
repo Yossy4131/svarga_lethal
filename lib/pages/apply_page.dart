@@ -29,7 +29,7 @@ class _ApplyPageState extends State<ApplyPage> {
   final _vrChatIdController = TextEditingController();
   final _xIdController = TextEditingController();
 
-  final List<bool> _agreements = List<bool>.filled(6, false);
+  final List<bool> _agreements = List<bool>.filled(_prohibited.length, false);
 
   bool _submitted = false;
   bool _isSubmitting = false;
