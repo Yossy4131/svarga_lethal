@@ -454,7 +454,7 @@ class _GallerySlideshow extends StatefulWidget {
 
 class _GallerySlideshowState extends State<_GallerySlideshow> {
   static const _images = [
-    'assets/images/VRChat_2026-04-06_20-20-39.072_3840x2160.png',
+    'assets/images/VRChat_2026-06-07_19-32-30.887_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-18-50.851_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-19-33.375_3840x2160.png',
     'assets/images/VRChat_2026-04-06_20-20-02.523_3840x2160.png',
