@@ -56,7 +56,15 @@ class _ApplyPageState extends State<ApplyPage> {
       final now = DateTime.now();
       if (startStr != null && endStr != null) {
         final start = DateTime.tryParse(startStr);
-        final end = DateTime.tryParse(endStr);
+        final endBase = DateTime.tryParse(endStr);
+        // 日付のみ（時刻なし）で渡された場合、当日23:59:59まで受付可能にする
+        final end =
+            endBase != null &&
+                endBase.hour == 0 &&
+                endBase.minute == 0 &&
+                endBase.second == 0
+            ? endBase.add(const Duration(hours: 23, minutes: 59, seconds: 59))
+            : endBase;
         if (start != null && end != null) {
           open = now.isAfter(start) && now.isBefore(end);
         }
